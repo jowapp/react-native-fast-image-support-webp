@@ -18,7 +18,11 @@ import {
     requireNativeComponent,
 } from 'react-native'
 
-const isFabricEnabled = (global as any)?.nativeFabricUIManager != null
+const isFabricEnabled =
+  typeof global !== 'undefined' &&
+  (global as any)?.nativeFabricUIManager !== undefined &&
+  (global as any)?.nativeFabricUIManager !== null
+  
 const isTurboModuleEnabled = (global as any).__turboModuleProxy != null
 const FastImageViewModule = isTurboModuleEnabled
     ? require('./NativeFastImageView').default

@@ -1,6 +1,8 @@
 import React, { forwardRef, memo } from 'react';
 import { View, Image, NativeModules, StyleSheet, Platform, requireNativeComponent, } from 'react-native';
-const isFabricEnabled = global?.nativeFabricUIManager != null;
+const isFabricEnabled = typeof global !== 'undefined' &&
+    global?.nativeFabricUIManager !== undefined &&
+    global?.nativeFabricUIManager !== null;
 const isTurboModuleEnabled = global.__turboModuleProxy != null;
 const FastImageViewModule = isTurboModuleEnabled
     ? require('./NativeFastImageView').default
