@@ -19,8 +19,8 @@
     },
     "license": "(MIT AND Apache-2.0)",
     "author": "Dream Sports Labs <dreamsportslabs@dream11.com> (https://github.com/dream-sports-labs)",
-    "main": "src/index",
-    "module": "src/index",
+    "main": "dist/index.js",
+    "module": "dist/index.js",
     "source": "src/index",
     "typings": "dist/index.d.ts",
     "files": [
@@ -31,9 +31,6 @@
         "!ios/build",
         "dist",
         "RNFastImage.podspec"
-    ],
-    "workspaces": [
-        "ReactNativeFastImageExample"
     ],
     "scripts": {
         "clean": "rm -rf dist tsconfig.tsbuildinfo",
@@ -102,6 +99,5 @@
         "android": {
             "javaPackageName": "com.dylanvann.fastimage"
         }
-    },
-    "packageManager": "yarn@3.6.4"
+    }
 }

@@ -42,7 +42,7 @@ ReactNativeFastImageExample/android/app/src/main/gen
 ReactNativeFastImageExample/ios/ReactNativeFastImageExample.xcworkspace
 # build
 react-native-fast-image-*.tgz
-dist/
+# dist/
 
 # coverage reports
 coverage
