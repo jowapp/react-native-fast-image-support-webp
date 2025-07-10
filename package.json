@@ -35,7 +35,6 @@
     "scripts": {
         "clean": "rm -rf dist tsconfig.tsbuildinfo",
         "build": "yarn clean && tsc",
-        "example": "yarn workspace reactnativefastimageexample",
         "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
         "prepack": "yarn build",
         "test": "jest",
@@ -58,7 +57,7 @@
         "registry": "https://registry.npmjs.org/"
     },
     "devDependencies": {
-        "@babel/core": "^7.24.7",
+        "@babel/core": "^7.28.0",
         "@babel/plugin-transform-private-methods": "^7.24.7",
         "@babel/preset-env": "^7.20.0",
         "@babel/runtime": "^7.24.7",

@@ -1,13 +1,10 @@
 import React, { forwardRef, memo } from 'react';
 import { View, Image, NativeModules, StyleSheet, Platform, requireNativeComponent, } from 'react-native';
-const isFabricEnabled = false;
 const isTurboModuleEnabled = global.__turboModuleProxy != null;
 const FastImageViewModule = isTurboModuleEnabled
     ? require('./NativeFastImageView').default
     : NativeModules.FastImageView;
-const FastImageView = isFabricEnabled
-    ? require('./FastImageViewNativeComponent').default
-    : requireNativeComponent('FastImageView');
+const FastImageView = requireNativeComponent('FastImageView');
 const resizeMode = {
     contain: 'contain',
     cover: 'cover',
@@ -20,11 +17,8 @@ const priority = {
     high: 'high',
 };
 const cacheControl = {
-    // Ignore headers, use uri as cache key, fetch only if not in cache.
     immutable: 'immutable',
-    // Respect http headers, no aggressive caching.
     web: 'web',
-    // Only load from cache.
     cacheOnly: 'cacheOnly',
 };
 const resolveDefaultSource = (defaultSource) => {
@@ -32,15 +26,12 @@ const resolveDefaultSource = (defaultSource) => {
         return null;
     }
     if (Platform.OS === 'android') {
-        // Android receives a URI string, and resolves into a Drawable using RN's methods.
         const resolved = Image.resolveAssetSource(defaultSource);
         if (resolved) {
             return resolved.uri;
         }
         return null;
     }
-    // iOS or other number mapped assets
-    // In iOS the number is passed, and bridged automatically into a UIImage
     return defaultSource;
 };
 function FastImageBase({ source, defaultSource, tintColor, onLoadStart, onProgress, onLoad, onError, onLoadEnd, style, fallback, children, resizeMode = 'cover', forwardedRef, ...props }) {
@@ -52,15 +43,10 @@ function FastImageBase({ source, defaultSource, tintColor, onLoadStart, onProgre
             React.createElement(Image, { ...props, style: [StyleSheet.absoluteFill, { tintColor }], source: resolvedSource, defaultSource: defaultSource, onLoadStart: onLoadStart, onProgress: onProgress, onLoad: onLoad, onError: onError, onLoadEnd: onLoadEnd, resizeMode: resizeMode }),
             children));
     }
-    // @ts-ignore non-typed property
-    const FABRIC_ENABLED = !!global?.nativeFabricUIManager;
-    // this type differs based on the `source` prop passed
     const resolvedSource = Image.resolveAssetSource(source);
-    // resolvedSource would be frozen, we can't modify it
     let modifiedSource = resolvedSource;
     if (resolvedSource?.headers &&
-        (FABRIC_ENABLED || Platform.OS === 'android')) {
-        // we do it like that to trick codegen
+        Platform.OS === 'android') {
         const headersArray = [];
         Object.keys(resolvedSource.headers).forEach((key) => {
             headersArray.push({ name: key, value: resolvedSource.headers[key] });

@@ -28,7 +28,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "paths": {
-      "@d11/react-native-fast-image": ["./src/index"]
+      "react-native-fast-image-support-webp": ["./src/index"]
     }
   },
   "include": ["./src"],

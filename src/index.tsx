@@ -4,29 +4,29 @@ import {
     Image,
     NativeModules,
     StyleSheet,
-    FlexStyle,
-    LayoutChangeEvent,
-    ShadowStyleIOS,
-    StyleProp,
-    TransformsStyle,
-    ImageRequireSource,
     Platform,
+    ImageRequireSource,
+    StyleProp,
+    FlexStyle,
+    TransformsStyle,
+    ShadowStyleIOS,
+    ColorValue,
+    LayoutChangeEvent,
     AccessibilityProps,
     ViewProps,
-    ColorValue,
     ImageResolvedAssetSource,
     requireNativeComponent,
 } from 'react-native'
+import { FastImageViewProps } from './NativeFastImageView'
 
-const isFabricEnabled = false
 const isTurboModuleEnabled = (global as any).__turboModuleProxy != null
+
 const FastImageViewModule = isTurboModuleEnabled
     ? require('./NativeFastImageView').default
     : NativeModules.FastImageView
 
-const FastImageView = isFabricEnabled
-    ? require('./FastImageViewNativeComponent').default
-    : requireNativeComponent('FastImageView')
+const FastImageView = requireNativeComponent<FastImageViewProps>('FastImageView')
+
 
 export type ResizeMode = 'contain' | 'cover' | 'stretch' | 'center'
 
@@ -48,11 +48,8 @@ const priority = {
 type Cache = 'immutable' | 'web' | 'cacheOnly'
 
 const cacheControl = {
-    // Ignore headers, use uri as cache key, fetch only if not in cache.
     immutable: 'immutable',
-    // Respect http headers, no aggressive caching.
     web: 'web',
-    // Only load from cache.
     cacheOnly: 'cacheOnly',
 } as const
 
@@ -107,37 +104,14 @@ export interface FastImageProps extends AccessibilityProps, ViewProps {
 
     onLoadEnd?(): void
 
-    /**
-     * onLayout function
-     *
-     * Invoked on mount and layout changes with
-     *
-     * {nativeEvent: { layout: {x, y, width, height}}}.
-     */
     onLayout?: (event: LayoutChangeEvent) => void
 
-    /**
-     *
-     * Style
-     */
     style?: StyleProp<ImageStyle>
-
-    /**
-     * TintColor
-     *
-     * If supplied, changes the color of all the non-transparent pixels to the given color.
-     */
 
     tintColor?: ColorValue
 
-    /**
-     * A unique identifier for this element to be used in UI Automation testing scripts.
-     */
     testID?: string
 
-    /**
-     * Render children within the image.
-     */
     children?: React.ReactNode
 }
 
@@ -148,7 +122,6 @@ const resolveDefaultSource = (
         return null
     }
     if (Platform.OS === 'android') {
-        // Android receives a URI string, and resolves into a Drawable using RN's methods.
         const resolved = Image.resolveAssetSource(
             defaultSource as ImageRequireSource,
         )
@@ -159,8 +132,6 @@ const resolveDefaultSource = (
 
         return null
     }
-    // iOS or other number mapped assets
-    // In iOS the number is passed, and bridged automatically into a UIImage
     return defaultSource
 }
 
@@ -205,20 +176,15 @@ function FastImageBase({
         )
     }
 
-    // @ts-ignore non-typed property
-    const FABRIC_ENABLED = !!global?.nativeFabricUIManager
-
-    // this type differs based on the `source` prop passed
     const resolvedSource = Image.resolveAssetSource(
         source as any,
     ) as ImageResolvedAssetSource & { headers: any }
-    // resolvedSource would be frozen, we can't modify it
+
     let modifiedSource = resolvedSource
     if (
         resolvedSource?.headers &&
-        (FABRIC_ENABLED || Platform.OS === 'android')
+        Platform.OS === 'android'
     ) {
-        // we do it like that to trick codegen
         const headersArray: { name: string; value: string }[] = []
         Object.keys(resolvedSource.headers).forEach((key) => {
             headersArray.push({ name: key, value: resolvedSource.headers[key] })

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlexStyle, LayoutChangeEvent, ShadowStyleIOS, StyleProp, TransformsStyle, ImageRequireSource, AccessibilityProps, ViewProps, ColorValue } from 'react-native';
+import { ImageRequireSource, StyleProp, FlexStyle, TransformsStyle, ShadowStyleIOS, ColorValue, LayoutChangeEvent, AccessibilityProps, ViewProps } from 'react-native';
 export type ResizeMode = 'contain' | 'cover' | 'stretch' | 'center';
 declare const resizeMode: {
     readonly contain: "contain";
@@ -62,32 +62,10 @@ export interface FastImageProps extends AccessibilityProps, ViewProps {
     onLoad?(event: OnLoadEvent): void;
     onError?(): void;
     onLoadEnd?(): void;
-    /**
-     * onLayout function
-     *
-     * Invoked on mount and layout changes with
-     *
-     * {nativeEvent: { layout: {x, y, width, height}}}.
-     */
     onLayout?: (event: LayoutChangeEvent) => void;
-    /**
-     *
-     * Style
-     */
     style?: StyleProp<ImageStyle>;
-    /**
-     * TintColor
-     *
-     * If supplied, changes the color of all the non-transparent pixels to the given color.
-     */
     tintColor?: ColorValue;
-    /**
-     * A unique identifier for this element to be used in UI Automation testing scripts.
-     */
     testID?: string;
-    /**
-     * Render children within the image.
-     */
     children?: React.ReactNode;
 }
 export interface FastImageStaticProperties {
